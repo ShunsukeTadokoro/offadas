@@ -8,7 +8,8 @@ scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
   "com.h2database" % "h2" % "1.4.177",
-  "com.typesafe.play" %% "play-slick" % "1.0.0"
+  "com.typesafe.play" %% "play-slick" % "1.0.0",
+  "com.typesafe.slick" %% "slick-codegen" % "3.0.0"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
