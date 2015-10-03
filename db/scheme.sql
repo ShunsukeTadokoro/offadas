@@ -1,38 +1,44 @@
-CREATE TABLE USER (
-  ID int not null primary key,
-  EMAIL varchar(255) not null,
-  PASSWORD varchar(255),
-  CREATED_AT timestamp not null,
-  STATUS_CODE char(3) not null
-);
+CREATE TABLE status (
+  code CHAR(3) NOT NULL,
+  name VARCHAR(45) NOT NULL,
+  PRIMARY KEY (code),
+  UNIQUE INDEX code_UNIQUE (code ASC),
+  UNIQUE INDEX name_UNIQUE (name ASC));
 
-CREATE TABLE OFFERSET (
-  ID int not null primary key,
-  USER_ID int not null,
-  NAME varchar(45)
-);
+CREATE TABLE user (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  email VARCHAR(100) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP NOT NULL,
+  status_code CHAR(3) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE INDEX id_UNIQUE (id ASC),
+  UNIQUE INDEX email_UNIQUE (email ASC));
 
-CREATE TABLE OFFER (
-  ID int not null primary key,
-  OFFERSET_ID int not null,
-  TARGET_CLASS varchar(45) not null,
-  CONTENT_CLASS varchar(45) not null
-);
+CREATE TABLE login (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id INT UNSIGNED NOT NULL,
+  logged_in TIMESTAMP NOT NULL)
 
-CREATE TABLE LOGIN (
-  ID int not null primary key,
-  USER_ID int not null,
-  LOGGED_IN timestamp not null
-);
+CREATE TABLE offerset (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id INT UNSIGNED NOT NULL,
+  name VARCHAR(45) NOT NULL DEFAULT 'unnamed',
+  PRIMARY KEY (id),
+  UNIQUE INDEX offerset_id_UNIQUE (id ASC));
 
-CREATE TABLE STATUS (
-  CODE CHAR(3) not null primary key,
-  NAME varchar(45) not null
-);
+CREATE TABLE offer (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  offerset_id INT UNSIGNED NOT NULL,
+  target_class VARCHAR(45) NOT NULL,
+  content_class VARCHAR(45) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE INDEX offer_id_UNIQUE (id ASC));
 
-CREATE TABLE OFFER_LOG (
-  ID int not null primary key,
-  OFFERSET_ID int not null,
-  OFFER_ID int not null,
-  TIMESTAMP timestamp not null
-);
+CREATE TABLE offer_log (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  offerset_id INT NOT NULL,
+  offer_id INT NOT NULL,
+  timestamp TIMESTAMP NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE INDEX offer_log_id_UNIQUE (id ASC));
