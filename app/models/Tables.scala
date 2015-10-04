@@ -105,18 +105,19 @@ trait Tables {
   /** Entity class storing rows of table Offerset
    *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
    *  @param userId Database column USER_ID SqlType(INTEGER)
-   *  @param name Database column NAME SqlType(VARCHAR), Length(45,true), Default(unnamed) */
-  case class OffersetRow(id: Int, userId: Int, name: String = "unnamed")
+   *  @param name Database column NAME SqlType(VARCHAR), Length(45,true), Default(unnamed)
+   *  @param statusCode Database column STATUS_CODE SqlType(VARCHAR), Length(45,true) */
+  case class OffersetRow(id: Int, userId: Int, name: String = "unnamed", statusCode: String)
   /** GetResult implicit for fetching OffersetRow objects using plain SQL queries */
   implicit def GetResultOffersetRow(implicit e0: GR[Int], e1: GR[String]): GR[OffersetRow] = GR{
     prs => import prs._
-    OffersetRow.tupled((<<[Int], <<[Int], <<[String]))
+    OffersetRow.tupled((<<[Int], <<[Int], <<[String], <<[String]))
   }
   /** Table description of table OFFERSET. Objects of this class serve as prototypes for rows in queries. */
   class Offerset(_tableTag: Tag) extends Table[OffersetRow](_tableTag, "OFFERSET") {
-    def * = (id, userId, name) <> (OffersetRow.tupled, OffersetRow.unapply)
+    def * = (id, userId, name, statusCode) <> (OffersetRow.tupled, OffersetRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(userId), Rep.Some(name)).shaped.<>({r=>import r._; _1.map(_=> OffersetRow.tupled((_1.get, _2.get, _3.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(userId), Rep.Some(name), Rep.Some(statusCode)).shaped.<>({r=>import r._; _1.map(_=> OffersetRow.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column ID SqlType(INTEGER), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("ID", O.AutoInc, O.PrimaryKey)
@@ -124,6 +125,8 @@ trait Tables {
     val userId: Rep[Int] = column[Int]("USER_ID")
     /** Database column NAME SqlType(VARCHAR), Length(45,true), Default(unnamed) */
     val name: Rep[String] = column[String]("NAME", O.Length(45,varying=true), O.Default("unnamed"))
+    /** Database column STATUS_CODE SqlType(VARCHAR), Length(45,true) */
+    val statusCode: Rep[String] = column[String]("STATUS_CODE", O.Length(45,varying=true))
   }
   /** Collection-like TableQuery object for table Offerset */
   lazy val Offerset = new TableQuery(tag => new Offerset(tag))
@@ -158,19 +161,18 @@ trait Tables {
    *  @param id Database column ID SqlType(INTEGER), AutoInc, PrimaryKey
    *  @param email Database column EMAIL SqlType(VARCHAR), Length(100,true)
    *  @param password Database column PASSWORD SqlType(VARCHAR), Length(255,true)
-   *  @param createdAt Database column CREATED_AT SqlType(TIMESTAMP)
-   *  @param statusCode Database column STATUS_CODE SqlType(CHAR), Length(3,false) */
-  case class UserRow(id: Int, email: String, password: String, createdAt: java.sql.Timestamp, statusCode: String)
+   *  @param createdAt Database column CREATED_AT SqlType(TIMESTAMP) */
+  case class UserRow(id: Int, email: String, password: String, createdAt: java.sql.Timestamp)
   /** GetResult implicit for fetching UserRow objects using plain SQL queries */
   implicit def GetResultUserRow(implicit e0: GR[Int], e1: GR[String], e2: GR[java.sql.Timestamp]): GR[UserRow] = GR{
     prs => import prs._
-    UserRow.tupled((<<[Int], <<[String], <<[String], <<[java.sql.Timestamp], <<[String]))
+    UserRow.tupled((<<[Int], <<[String], <<[String], <<[java.sql.Timestamp]))
   }
   /** Table description of table USER. Objects of this class serve as prototypes for rows in queries. */
   class User(_tableTag: Tag) extends Table[UserRow](_tableTag, "USER") {
-    def * = (id, email, password, createdAt, statusCode) <> (UserRow.tupled, UserRow.unapply)
+    def * = (id, email, password, createdAt) <> (UserRow.tupled, UserRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(email), Rep.Some(password), Rep.Some(createdAt), Rep.Some(statusCode)).shaped.<>({r=>import r._; _1.map(_=> UserRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(email), Rep.Some(password), Rep.Some(createdAt)).shaped.<>({r=>import r._; _1.map(_=> UserRow.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column ID SqlType(INTEGER), AutoInc, PrimaryKey */
     val id: Rep[Int] = column[Int]("ID", O.AutoInc, O.PrimaryKey)
@@ -180,8 +182,6 @@ trait Tables {
     val password: Rep[String] = column[String]("PASSWORD", O.Length(255,varying=true))
     /** Database column CREATED_AT SqlType(TIMESTAMP) */
     val createdAt: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("CREATED_AT")
-    /** Database column STATUS_CODE SqlType(CHAR), Length(3,false) */
-    val statusCode: Rep[String] = column[String]("STATUS_CODE", O.Length(3,varying=false))
 
     /** Uniqueness Index over (email) (database name EMAIL_UNIQUE_INDEX_2) */
     val index1 = index("EMAIL_UNIQUE_INDEX_2", email, unique=true)
