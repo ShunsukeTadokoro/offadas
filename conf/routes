@@ -10,3 +10,4 @@ GET         /assets/*file        controllers.Assets.versioned(path="/public", fi
 
 GET         /hoge/:userId        controllers.UserController.show(userId: Int)
 POST        /hoge/create         controllers.UserController.create
+GET         /fuga/:userId        controllers.OfferController.list(userId: Int)

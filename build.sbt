@@ -7,6 +7,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.6"
 
 libraryDependencies ++= Seq(
+  "org.scalaz" %% "scalaz-core" % "7.1.4",
   "com.h2database" % "h2" % "1.4.177",
   "com.typesafe.play" %% "play-slick" % "1.0.0",
   "com.typesafe.slick" %% "slick-codegen" % "3.0.0"

@@ -1,6 +1,5 @@
 package service
 
-import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
 import slick.dbio.DBIO
@@ -20,7 +19,7 @@ trait UserService {
     User.filter(_.id === id.bind).result.headOption.map(createDisplayUser)
   }
 
-  def createOrUpdateUser(user: UserInfo): DBIO[Int] = {
+  def createUser(user: UserInfo): DBIO[Int] = {
     (User returning User.map(_.id)) += UserRow(
       id        = 1,
       email     = user.email,
@@ -28,6 +27,19 @@ trait UserService {
       createdAt = currentTimestamp
     )
   }
+
+  def updateUser(id: Int, updateInfo: UserInfo): DBIO[Int] = {
+    User.filter(_.id === id.bind).map { t =>
+      (t.id, t.email, t.password)
+    }.update((id, updateInfo.email, updateInfo.password))
+  }
+
+  def deleteUser(id: Int): DBIO[Int] = User.filter(_.id === id.bind).delete
+
+  private def existUser(userId: Int): DBIO[Option[Int]] = {
+    User.filter(_.id === userId.bind).map(_.id)
+  }.result.headOption
+
 }
 
 object UserService {

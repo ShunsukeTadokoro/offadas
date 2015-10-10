@@ -35,7 +35,7 @@ class UserController @Inject()(protected val dbConfigProvider: DatabaseConfigPro
       error => Future(BadRequest(Json.obj("message" -> JsError.toJson(error)))),
       form  => {
         val hashed = form.copy(password = sign(form.password))
-        db.run(createOrUpdateUser(hashed)).map(x => Ok(Json.obj("created" -> x.toString)))
+        db.run(createUser(hashed)).map(x => Ok(Json.obj("created" -> x.toString)))
       }
     )
   }
