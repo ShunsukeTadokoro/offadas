@@ -7,7 +7,6 @@ import play.api.mvc.Controller
 import service.OffersetService
 import play.api.libs.json.{JsError, Json}
 import play.api.mvc._
-import models.Tables._
 import slick.driver.JdbcProfile
 import utils.ExecutionContextProvider
 

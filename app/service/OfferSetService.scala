@@ -2,7 +2,6 @@ package service
 
 import service.OffersetService.DisplayOfferSet
 import slick.dbio.DBIO
-
 import models.Tables._
 import profile.api._
 import utils.ExecutionContextProvider

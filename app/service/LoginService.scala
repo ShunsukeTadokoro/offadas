@@ -3,7 +3,6 @@ package service
 import java.sql.Timestamp
 
 import slick.dbio.DBIO
-
 import models.Tables._
 import profile.api._
 import utils.SystemClock

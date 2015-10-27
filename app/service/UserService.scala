@@ -3,10 +3,9 @@ package service
 import java.text.SimpleDateFormat
 
 import slick.dbio.DBIO
-
+import UserService._
 import models.Tables._
 import profile.api._
-import UserService._
 import utils.{SystemClock, ExecutionContextProvider}
 
 /**
