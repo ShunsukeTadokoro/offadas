@@ -16,10 +16,11 @@ import utils.ExecutionContextProvider
 class OfferController @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   extends Controller with OffersetService with HasDatabaseConfigProvider[JdbcProfile] with ExecutionContextProvider {
 
+  implicit val offerFormat = Json.format[OffersetService.DisplayOffer]
   implicit val offersetFormat = Json.format[OffersetService.DisplayOfferSet]
 
+
   def list(userId: Int) = Action.async { implicit rs =>
-    val action = db.run(listOfferSet(userId))
-    action.map(x => Ok(Json.toJson(x)))
+    db.run(ex(userId)).map(x => Ok(Json.toJson(x.groupBy(_._1).map { case (k,v) => OffersetService.DisplayOfferSet(k.name, k.statusCode, v.map( x => OffersetService.DisplayOffer(x._2.targetClass, x._2.contentClass)))}))) // TODO 綺麗に
   }
 }
