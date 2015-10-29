@@ -6,7 +6,6 @@ import models.Tables._
 import profile.api._
 import utils.ExecutionContextProvider
 
-import scala.concurrent.ExecutionContext
 
 /**
  * Created by Shunsuke on 2015/10/11.
@@ -22,13 +21,19 @@ trait OffersetService {
     Offerset.filter(_.id === offerId.bind).result
   }
 
-  def selectOffer(offersetId: Int): DBIO[Seq[OfferRow]] = {
-    Offer.filter(_.id === offersetId.bind).result
+  def selectOffer(userId: Int): DBIO[Iterable[DisplayOfferSet]] = {
+    (Offerset.filter(_.userId === userId.bind) join Offer on(_.id === _.offersetId)).result
+      .map(x =>
+        x.groupBy(_._1).map { case (k,v) =>
+          DisplayOfferSet(k.name, k.statusCode, v.map( x => DisplayOffer(x._2.targetClass, x._2.contentClass)))
+        }
+      )
   }
 
-  def ex(userId: Int): DBIO[Seq[(OffersetRow, OfferRow)]] = {
+  def selectOffersets(userId: Int): DBIO[Seq[(OffersetRow, OfferRow)]] = {
     (Offerset.filter(_.userId === userId.bind) join Offer on(_.id === _.offersetId)).result
   }
+
 
 }
 

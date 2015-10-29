@@ -21,6 +21,10 @@ class OfferController @Inject()(protected val dbConfigProvider: DatabaseConfigPr
 
 
   def list(userId: Int) = Action.async { implicit rs =>
-    db.run(ex(userId)).map(x => Ok(Json.toJson(x.groupBy(_._1).map { case (k,v) => OffersetService.DisplayOfferSet(k.name, k.statusCode, v.map( x => OffersetService.DisplayOffer(x._2.targetClass, x._2.contentClass)))}))) // TODO 綺麗に
+    db.run(selectOffersets(userId)).map(x => Ok(Json.toJson(x.groupBy(_._1).map { case (k,v) => OffersetService.DisplayOfferSet(k.name, k.statusCode, v.map( x => OffersetService.DisplayOffer(x._2.targetClass, x._2.contentClass)))}))) // TODO 綺麗に
+  }
+
+  def list2(userId: Int) = Action.async { implicit rs =>
+    db.run(selectOffer(userId).map(x => Ok(Json.toJson(x))))
   }
 }
