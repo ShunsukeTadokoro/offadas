@@ -29,21 +29,21 @@ trait UserService {
 
   def updateUser(id: Int, updateInfo: UserInfo): DBIO[Int] = {
     User.filter(_.id === id.bind).map { t =>
-      (t.id, t.email, t.password)
-    }.update((id, updateInfo.email, updateInfo.password))
+      (t.email, t.password)
+    }.update((updateInfo.email, updateInfo.password))
   }
 
   def deleteUser(id: Int): DBIO[Int] = User.filter(_.id === id.bind).delete
 
-  private def existUser(userId: Int): DBIO[Option[Int]] = {
-    User.filter(_.id === userId.bind).map(_.id)
-  }.result.headOption
+  def existUser(id: Int): DBIO[Boolean] = {
+    User.filter(_.id === id.bind).exists.result
+  }
 
 }
 
 object UserService {
 
-  case class UserInfo(email: String, password: String)
+  case class UserInfo(id: Option[Int], email: String, password: String)
 
   case class DisplayUser(id: Int, email: String, createdAt: String)
   def createDisplayUser(maybeUser: Option[UserRow]): Option[DisplayUser] = {

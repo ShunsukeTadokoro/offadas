@@ -12,7 +12,8 @@ import slick.driver.JdbcProfile
 
 import utils.{SystemClock, ExecutionContextProvider}
 
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 /**
  * Created by Shunsuke on 2015/10/04.
@@ -36,6 +37,25 @@ class UserController @Inject()(protected val dbConfigProvider: DatabaseConfigPro
       form  => {
         val hashed = form.copy(password = sign(form.password))
         db.run(createUser(hashed)).map(x => Ok(Json.obj("created" -> x.toString)))
+      }
+    )
+  }
+
+  def edit = Action.async(parse.json) { implicit rs =>
+    rs.body.validate[UserService.UserInfo].fold(
+      error => Future(BadRequest(Json.obj("message" -> JsError.toJson(error)))),
+      form => {
+        val (userId, isExist) = for {
+          userId <- form.id
+          isExist <- existUser(userId)
+        } yield (userId, isExist)
+
+        if (isExist) {
+          val hashed = form.copy(password = sign(form.password))
+          db.run(updateUser(userId, hashed)).map(x => Ok(Json.obj("updated" -> x.toString)))
+        } else {
+          Future(BadRequest(Json.obj("message" -> "notFound")))
+        }
       }
     )
   }
