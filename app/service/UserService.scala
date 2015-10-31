@@ -18,6 +18,10 @@ trait UserService {
     User.filter(_.id === id.bind).result.headOption.map(createDisplayUser)
   }
 
+  def findUser(email: String): DBIO[Option[UserRow]] = {
+    User.filter(_.email === email.bind).result.headOption
+  }
+
   def createUser(user: UserInfo): DBIO[Int] = {
     (User returning User.map(_.id)) += UserRow(
       id        = 1,
