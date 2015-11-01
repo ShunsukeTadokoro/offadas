@@ -27,7 +27,7 @@ class UserController @Inject()(protected val dbConfigProvider: DatabaseConfigPro
   implicit val displayUserFormat = Json.format[UserService.DisplayUser]
   implicit val createUserFormat  = Json.format[UserService.UserInfo]
 
-  def show(userId: Int) = Action.async { implicit rs =>
+  def show(userId: Int) = AuthAction.async { implicit rs =>
     db.run(findUser(userId)).map {
       case Some(user) => Ok(Json.toJson(user))
       case None       => NotFound(Json.obj("error" -> "notFound"))

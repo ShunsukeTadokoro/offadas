@@ -2,16 +2,17 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-OPTIONS        /*all                    controllers.Application.preFlight(all: String)
+OPTIONS        /*all                                controllers.Application.preFlight(all: String)
 
 # Home page
-GET            /                        controllers.Application.index
+GET            /                                    controllers.Application.index
 
 # Map static resources from the /public folder to the /assets URL path
-GET            /assets/*file            controllers.Assets.versioned(path="/public", file: Asset)
+GET            /assets/*file                        controllers.Assets.versioned(path="/public", file: Asset)
 
-GET            /user/:userId            controllers.UserController.show(userId: Int)
-POST           /user/create             controllers.UserController.create
-POST           /user/signin             controllers.UserController.signin
-DELETE         /user/signout            controllers.UserController.signout
-GET            /offerset/:userId        controllers.OfferController.list(userId: Int)
+GET            /user/:userId                        controllers.UserController.show(userId: Int)
+POST           /user/create                         controllers.UserController.create
+POST           /user/signin                         controllers.UserController.signin
+DELETE         /user/signout                        controllers.UserController.signout
+GET            /offerset/:userId                    controllers.OfferController.list(userId: Int)
+GET            /offerset/:userId/:offersetId        controllers.OfferController.detail(userId: Int, offersetId: Int)

@@ -17,11 +17,16 @@ trait OffersetService {
     Offerset.filter(_.userId === userId.bind).map(_.id).result
   }
 
-  def selectOfferSet(offerId: Int): DBIO[Seq[OffersetRow]] = {
-    Offerset.filter(_.id === offerId.bind).result
+  def selectOfferset(offerId: Int): DBIO[Option[DisplayOfferSet]] = { // TODO リファクタリングの余地あり
+    (Offerset.filter(_.id === offerId.bind) join Offer on(_.id === _.offersetId)).result
+     .map(x =>
+        x.groupBy(_._1).map { case (k,v) =>
+          DisplayOfferSet(k.name, k.statusCode, v.map( x => DisplayOffer(x._2.targetClass, x._2.contentClass)))
+        }.headOption
+      )
   }
 
-  def selectOffer(userId: Int): DBIO[Iterable[DisplayOfferSet]] = {
+  def selectOffersetList(userId: Int): DBIO[Iterable[DisplayOfferSet]] = { // TODO リファクタリングの余地あり
     (Offerset.filter(_.userId === userId.bind) join Offer on(_.id === _.offersetId)).result
       .map(x =>
         x.groupBy(_._1).map { case (k,v) =>
