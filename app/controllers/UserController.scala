@@ -9,19 +9,20 @@ import play.api.mvc.Cookie
 import play.api.mvc.DiscardingCookie
 import play.api.mvc._
 import play.api.libs.Crypto._
-import service.UserService
+import service.{UserService, LoginService}
 
 import slick.driver.JdbcProfile
 
 import utils.{SystemClock, ExecutionContextProvider}
 
-import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.{Await, Future}
 
 /**
  * Created by Shunsuke on 2015/10/04.
  */
 class UserController @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
-  extends Controller with UserService with HasDatabaseConfigProvider[JdbcProfile] with ExecutionContextProvider with SystemClock {
+  extends Controller with UserService with LoginService with HasDatabaseConfigProvider[JdbcProfile] with ExecutionContextProvider with SystemClock {
 
   implicit val displayUserFormat = Json.format[UserService.DisplayUser]
   implicit val createUserFormat  = Json.format[UserService.UserInfo]
@@ -53,12 +54,13 @@ class UserController @Inject()(protected val dbConfigProvider: DatabaseConfigPro
         db.run(findUser(form.email)).map {
           case Some(user) => {
             if(user.password == sign(form.password)) {
+              Await.result(db.run(recordLogin(user.id)), Duration.Inf)
               Ok(Json.obj("created" -> "signed in.")).withCookies(Cookie("id", user.id.toString))
             } else {
               BadRequest(Json.obj("message" -> "invalid pass."))
             }
           }
-          case None => BadRequest(Json.obj("message" -> "user not exist."))
+          case None => BadRequest(Json.obj("message" -> "user not exist.")) // TODO メッセージはパスが間違っている時のものと同じように
         }
       }
     )
