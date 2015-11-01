@@ -38,11 +38,6 @@ trait UserService {
   }
 
   def deleteUser(id: Int): DBIO[Int] = User.filter(_.id === id.bind).delete
-
-  def existUser(id: Int): DBIO[Boolean] = {
-    User.filter(_.id === id.bind).exists.result
-  }
-
 }
 
 object UserService {

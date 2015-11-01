@@ -19,8 +19,9 @@ import scala.concurrent.Future
 class OfferController @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
   extends Controller with OffersetService with HasDatabaseConfigProvider[JdbcProfile] with ExecutionContextProvider {
 
+  implicit val offersetListFormat = Json.format[OffersetService.DisplayOffersetList]
   implicit val offerFormat = Json.format[OffersetService.DisplayOffer]
-  implicit val offersetFormat = Json.format[OffersetService.DisplayOfferSet]
+  implicit val offersetFormat = Json.format[OffersetService.DisplayOfferset]
 
 
   def list(userId: Int) = AuthAction.async { implicit rs =>
@@ -30,7 +31,6 @@ class OfferController @Inject()(protected val dbConfigProvider: DatabaseConfigPr
     } else {
       Future(Forbidden(Json.obj("message" -> "forbidden")))
     }
-
   }
 
   def detail(userId: Int, offersetId: Int) = AuthAction.async { implicit rs =>
