@@ -1,6 +1,6 @@
 package service
 
-import service.OffersetService.{DisplayOffer, DisplayOfferSet}
+import service.OffersetService.{DisplayOffersetList, DisplayOffer, DisplayOfferset}
 import slick.dbio.DBIO
 import models.Tables._
 import profile.api._
@@ -13,33 +13,27 @@ import utils.ExecutionContextProvider
 trait OffersetService {
   self: ExecutionContextProvider =>
 
-  def selectOfferSetId(userId: Int): DBIO[Seq[Int]] = {
-    Offerset.filter(_.userId === userId.bind).map(_.id).result
+  def selectOffersetList(userId: Int): DBIO[Seq[DisplayOffersetList]] = { // TODO リファクタリングの余地あり
+    Offerset.filter(_.userId === userId.bind).result.map(rows => rows.map { record =>
+      DisplayOffersetList(record.id, record.name, record.statusCode)
+    })
   }
 
-  def selectOfferSet(offerId: Int): DBIO[Seq[OffersetRow]] = {
-    Offerset.filter(_.id === offerId.bind).result
-  }
-
-  def selectOffer(userId: Int): DBIO[Iterable[DisplayOfferSet]] = {
-    (Offerset.filter(_.userId === userId.bind) join Offer on(_.id === _.offersetId)).result
-      .map(x =>
+  def selectOfferset(offersetId: Int): DBIO[Option[DisplayOfferset]] = { // TODO リファクタリングの余地あり
+    (Offerset.filter(_.id === offersetId.bind) join Offer on(_.id === _.offersetId)).result
+     .map(x =>
         x.groupBy(_._1).map { case (k,v) =>
-          DisplayOfferSet(k.name, k.statusCode, v.map( x => DisplayOffer(x._2.targetClass, x._2.contentClass)))
-        }
+          DisplayOfferset(k.name, k.statusCode, v.map( x => DisplayOffer(x._2.targetClass, x._2.contentClass)))
+        }.headOption
       )
   }
-
-  def selectOffersets(userId: Int): DBIO[Seq[(OffersetRow, OfferRow)]] = {
-    (Offerset.filter(_.userId === userId.bind) join Offer on(_.id === _.offersetId)).result
-  }
-
-
 }
 
 object OffersetService {
+  
+  case class DisplayOffersetList(id: Int, name: String, status: String)
 
-  case class DisplayOfferSet(name: String, status: String, offers: Seq[DisplayOffer])
+  case class DisplayOfferset(name: String, status: String, offers: Seq[DisplayOffer])
 
   case class DisplayOffer(targetClass: String, contentClass: String)
 }
