@@ -11,6 +11,19 @@ CREATE TABLE IF NOT EXISTS `offadas`.`user` (
   UNIQUE INDEX `email_UNIQUE` (`email` ASC))
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `offadas`.`admin`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `offadas`.`admin` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `email` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(255) NOT NULL,
+  `authority` CHAR(4) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
+ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `offadas`.`login`
@@ -28,6 +41,21 @@ CREATE TABLE IF NOT EXISTS `offadas`.`login` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `offadas`.`admin_login`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `offadas`.`admin_login` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `admin_id` INT NOT NULL,
+  `logged_in` TIMESTAMP NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_login_admin_idx` (`admin_id` ASC),
+  CONSTRAINT `fk_login_admin`
+    FOREIGN KEY (`admin_id`)
+    REFERENCES `offadas`.`admin` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `offadas`.`status`

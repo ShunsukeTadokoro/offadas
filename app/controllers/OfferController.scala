@@ -39,8 +39,8 @@ class OfferController @Inject()(protected val dbConfigProvider: DatabaseConfigPr
   }
 
   def detail(userId: Int, offersetId: Int) = UserAuthAction.async { implicit rs =>
-    val cookieId = rs.cookies.get("id").map(_.value).getOrElse("nothing")
-    if(cookieId.toInt == userId) {
+    val cookieUserId = rs.cookies.get("id").map(_.value).getOrElse("nothing")
+    if(cookieUserId.toInt == userId) {
       db.run(selectOfferset(offersetId)) map {
         case Some(offerset) => Ok(Json.toJson(offerset))
         case None => NotFound(Json.obj("message" -> "not exist"))

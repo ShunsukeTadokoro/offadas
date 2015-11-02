@@ -1,9 +1,12 @@
 # insert test data
-insert into user (id, email , password, created_at  ) values ( 1, 'test1@hoge.com', 'test', current_date ) ;
-insert into user (id, email , password, created_at  ) values ( 2, 'test2@hoge.com', 'test', current_date ) ;
-insert into user (id, email , password, created_at  ) values ( 3, 'test3@hoge.com', 'test', current_date ) ;
-insert into user (id, email , password, created_at  ) values ( 4, 'test4@hoge.com', 'test', current_date ) ;
-insert into user (id, email , password, created_at  ) values ( 5, 'test5@hoge.com', 'test', current_date ) ;
+insert into user (id, email , password, created_at  ) values ( 1, 'test1@hoge.com', '2e0cdbd5b951e6953a3916eebd583c5600588869', current_date ) ;
+insert into user (id, email , password, created_at  ) values ( 2, 'test2@hoge.com', '2e0cdbd5b951e6953a3916eebd583c5600588869', current_date ) ;
+insert into user (id, email , password, created_at  ) values ( 3, 'test3@hoge.com', '2e0cdbd5b951e6953a3916eebd583c5600588869', current_date ) ;
+insert into user (id, email , password, created_at  ) values ( 4, 'test4@hoge.com', '2e0cdbd5b951e6953a3916eebd583c5600588869', current_date ) ;
+insert into user (id, email , password, created_at  ) values ( 5, 'test5@hoge.com', '2e0cdbd5b951e6953a3916eebd583c5600588869', current_date ) ;
+
+insert into admin (id, email , password, authority  ) values ( 1, 's.tadokoro0317@gmail.com', '2e0cdbd5b951e6953a3916eebd583c5600588869', 'MSTR' ) ;
+insert into admin (id, email , password, authority  ) values ( 2, 'admin@hoge.com', '2e0cdbd5b951e6953a3916eebd583c5600588869', 'STAT' ) ;
 
 insert into login ( id , user_id , logged_in ) values ( 1, 1, current_timestamp );
 insert into login ( id , user_id , logged_in ) values ( 2, 2, current_timestamp );

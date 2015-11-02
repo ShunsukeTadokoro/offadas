@@ -45,3 +45,11 @@ object StatusType extends SealedEnumCompanion[StatusType, String]{
 
   def values: Seq[StatusType] = Seq(Free, Premium, Campaign)
 }
+
+sealed abstract class AdminType(val code: String) extends SealedEnum[String]
+object AdminType extends SealedEnumCompanion[StatusType, String]{
+  case object Master extends StatusType("MSTR")
+  case object Statistic extends StatusType("STAT")
+
+  def values: Seq[StatusType] = Seq(Master, Statistic)
+}
