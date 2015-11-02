@@ -20,3 +20,4 @@ POST           /offer                               controllers.OfferController.
 
 # Admin
 GET            /admin/list                          controllers.AdminController.list
+POST           /admin/login                         controllers.AdminController.login

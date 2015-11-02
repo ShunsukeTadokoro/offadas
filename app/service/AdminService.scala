@@ -49,6 +49,7 @@ trait AdminService {
 object AdminService {
   // In
   case class AdminInfo(email: String, password: String, authority: String)
+  case class AdminLoginInfo(email: String, password: String)
 
   // Out
   case class DisplayAdmin(email: String, authority: String)
