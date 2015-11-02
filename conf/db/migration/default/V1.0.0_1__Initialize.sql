@@ -2,7 +2,7 @@
 -- Table `offadas`.`user`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `offadas`.`user` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(100) NOT NULL,
   `password` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP NOT NULL,
@@ -16,8 +16,8 @@ ENGINE = InnoDB;
 -- Table `offadas`.`login`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `offadas`.`login` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` INT UNSIGNED NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
   `logged_in` TIMESTAMP NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_login_user_idx` (`user_id` ASC),
@@ -45,8 +45,8 @@ ENGINE = InnoDB;
 -- Table `offadas`.`offerset`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `offadas`.`offerset` (
-  `id` INT UNSIGNED NOT NULL,
-  `user_id` INT UNSIGNED NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL DEFAULT '名称未設定',
   `status_code` CHAR(4) NOT NULL,
   PRIMARY KEY (`id`),
@@ -70,8 +70,8 @@ ENGINE = InnoDB;
 -- Table `offadas`.`offer`
 -- ----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `offadas`.`offer` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `offerset_id` INT UNSIGNED NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `offerset_id` INT NOT NULL,
   `target_class` VARCHAR(45) NOT NULL,
   `content_class` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
@@ -89,7 +89,7 @@ ENGINE = InnoDB;
 -- Table `offadas`.`offer_log`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `offadas`.`offer_log` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `offerset_id` INT NOT NULL,
   `offer_id` INT NOT NULL,
   `timestamp` TIMESTAMP NOT NULL,

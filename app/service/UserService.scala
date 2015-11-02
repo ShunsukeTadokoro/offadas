@@ -41,10 +41,12 @@ trait UserService {
 }
 
 object UserService {
-
+  // In
   case class UserInfo(id: Option[Int], email: String, password: String)
 
+  // Out
   case class DisplayUser(id: Int, email: String, createdAt: String)
+
   def createDisplayUser(maybeUser: Option[UserRow]): Option[DisplayUser] = {
     maybeUser match {
       case Some(user) => {
@@ -54,8 +56,6 @@ object UserService {
       case None => None
     }
   }
-
-
 }
 
 

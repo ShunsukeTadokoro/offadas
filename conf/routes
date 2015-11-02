@@ -16,3 +16,4 @@ POST           /user/signin                         controllers.UserController.s
 DELETE         /user/signout                        controllers.UserController.signout
 GET            /offerset/:userId                    controllers.OfferController.list(userId: Int)
 GET            /offerset/:userId/:offersetId        controllers.OfferController.detail(userId: Int, offersetId: Int)
+POST           /offer                               controllers.OfferController.log

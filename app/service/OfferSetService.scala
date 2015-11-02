@@ -1,17 +1,18 @@
 package service
 
-import service.OffersetService.{DisplayOffersetList, DisplayOffer, DisplayOfferset}
 import slick.dbio.DBIO
+
 import models.Tables._
 import profile.api._
-import utils.ExecutionContextProvider
+import service.OffersetService.{DisplayOffersetList, DisplayOffer, DisplayOfferset}
+import utils.{SystemClock, ExecutionContextProvider}
 
 
 /**
  * Created by Shunsuke on 2015/10/11.
  */
 trait OffersetService {
-  self: ExecutionContextProvider =>
+  self: ExecutionContextProvider with SystemClock=>
 
   def selectOffersetList(userId: Int): DBIO[Seq[DisplayOffersetList]] = { // TODO リファクタリングの余地あり
     Offerset.filter(_.userId === userId.bind).result.map(rows => rows.map { record =>
@@ -27,13 +28,18 @@ trait OffersetService {
         }.headOption
       )
   }
+
+  def logOffer(offersetId: Int, offerId: Int): DBIO[Int] = {
+    OfferLog += OfferLogRow(1, offersetId, offerId, currentTimestamp)
+  }
 }
 
 object OffersetService {
-  
+  // In
+  case class LogOfferInfo(offersetId: Int, offerId: Int)
+
+  // Out
   case class DisplayOffersetList(id: Int, name: String, status: String)
-
   case class DisplayOfferset(name: String, status: String, offers: Seq[DisplayOffer])
-
   case class DisplayOffer(targetClass: String, contentClass: String)
 }

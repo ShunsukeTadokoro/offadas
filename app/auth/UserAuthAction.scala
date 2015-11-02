@@ -10,14 +10,14 @@ import scala.concurrent.Future
  * @author shunsuke tadokoro
  */
 
-object AuthAction extends ActionBuilder[Request]{
+object UserAuthAction extends ActionBuilder[Request]{
 
   override def invokeBlock[A](request: Request[A], block: (Request[A]) => Future[Result]): Future[Result] = {
     Logger.debug("beforeAction is invoked.")
     request.cookies.get("id") match {
       case Some(_) => block.apply(request)
       case None => {
-        Logger.debug("not authorized access tried")
+        Logger.debug("not authorized access tried - user")
         Future.successful(Results.Status(401).apply(Json.obj("result" -> "Not Authorized")))
       }
     }

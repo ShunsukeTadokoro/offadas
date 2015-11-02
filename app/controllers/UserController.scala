@@ -2,7 +2,7 @@ package controllers
 
 import javax.inject.Inject
 
-import auth.AuthAction
+import auth.UserAuthAction
 import play.api.db.slick.{HasDatabaseConfigProvider, DatabaseConfigProvider}
 import play.api.libs.json.{JsError, Json}
 import play.api.mvc.Cookie
@@ -27,7 +27,7 @@ class UserController @Inject()(protected val dbConfigProvider: DatabaseConfigPro
   implicit val displayUserFormat = Json.format[UserService.DisplayUser]
   implicit val createUserFormat  = Json.format[UserService.UserInfo]
 
-  def show(userId: Int) = AuthAction.async { implicit rs =>
+  def show(userId: Int) = UserAuthAction.async { implicit rs =>
     db.run(findUser(userId)).map {
       case Some(user) => Ok(Json.toJson(user))
       case None       => NotFound(Json.obj("error" -> "notFound"))
@@ -66,7 +66,7 @@ class UserController @Inject()(protected val dbConfigProvider: DatabaseConfigPro
     )
   }
   
-  def signout = AuthAction { implicit rs =>
+  def signout = UserAuthAction { implicit rs =>
     Ok(Json.obj("message" -> "Thank you, come again! by Dr.Apu Nahasapeemapetilon")).discardingCookies(DiscardingCookie("id"))
   }
 
