@@ -13,7 +13,7 @@ import service.{UserService, LoginService}
 
 import slick.driver.JdbcProfile
 
-import utils.{SystemClock, ExecutionContextProvider}
+import utils.{DateUtils, SystemClock, ExecutionContextProvider}
 
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
@@ -22,7 +22,8 @@ import scala.concurrent.{Await, Future}
  * Created by Shunsuke on 2015/10/04.
  */
 class UserController @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
-  extends Controller with UserService with LoginService with HasDatabaseConfigProvider[JdbcProfile] with ExecutionContextProvider with SystemClock {
+  extends Controller with UserService with LoginService with HasDatabaseConfigProvider[JdbcProfile] with ExecutionContextProvider
+  with SystemClock with DateUtils {
 
   implicit val displayUserFormat = Json.format[UserService.DisplayUser]
   implicit val createUserFormat  = Json.format[UserService.UserInfo]

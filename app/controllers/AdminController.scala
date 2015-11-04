@@ -8,10 +8,10 @@ import play.api.db.slick.{HasDatabaseConfigProvider, DatabaseConfigProvider}
 import play.api.libs.Crypto._
 import play.api.libs.json.Json
 import play.api.mvc.{Cookie, Action, Controller}
-import service.AdminService
+import service.{LoginService, AdminService}
 import service.AdminService.DisplayAdmin
 import slick.driver.JdbcProfile
-import utils.{SystemClock, ExecutionContextProvider}
+import utils.{DateUtils, SystemClock, ExecutionContextProvider}
 
 import scala.concurrent.{Future, Await}
 import scala.concurrent.duration.Duration
@@ -20,11 +20,13 @@ import scala.concurrent.duration.Duration
  * @author Shunsuke Tadokoro
  */
 class AdminController @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
-  extends Controller with AdminService with HasDatabaseConfigProvider[JdbcProfile] with ExecutionContextProvider with SystemClock {
+  extends Controller with AdminService with LoginService
+  with HasDatabaseConfigProvider[JdbcProfile] with ExecutionContextProvider with SystemClock with DateUtils {
 
   implicit val adminInfoFormat = Json.format[AdminService.AdminInfo]
   implicit val displayAdminFormat = Json.format[DisplayAdmin]
-  implicit val adminLonginFormat = Json.format[AdminService.AdminLoginInfo]
+  implicit val adminLoginFormat = Json.format[AdminService.AdminLoginInfo]
+  implicit val loginLogFormat = Json.format[LoginService.DisplayLogin]
 
   def list = AdminAuthAction.async { implicit rs =>
     val adminId = rs.cookies.get("adminId").map(_.value).getOrElse("-1")
@@ -56,6 +58,12 @@ class AdminController @Inject()(protected val dbConfigProvider: DatabaseConfigPr
         }
       }
     )
+  }
+
+  def listLogin(fromStr: Option[String], toStr: Option[String]) = AdminAuthAction.async { implicit rs =>
+    val from = fromStr.map(x => toTimestamp(parseDateTime(x)))
+    val to = toStr.map(x => toTimestamp(parseDateTime(x)))
+    db.run(listLoginLog(from, to)).map(x => Ok(Json.toJson(x)))
   }
 
 }
